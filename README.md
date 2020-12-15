@@ -24,7 +24,7 @@ in collaboration with the
 
 # Principle
 
-<img src="./README_images/data_time.svg" alt="model with data and time" width="750">
+<img src="./README_images/data_time.png" alt="model with data and time" width="1000">
 
 
 # Refining the execution of interaction models with symbolic execution
@@ -34,12 +34,12 @@ With those enriched models, we can refine the processes of interaction execution
 
 ## Example 1 : Multi-Trace analysis with PASS verdict
 
-<img src="./README_images/exemple_data_pass.svg" alt="Multi-Trace analysis with PASS verdict" width="500">
+<img src="./README_images/exemple_data_pass.svg" alt="Multi-Trace analysis with PASS verdict" width="750">
 
 ## Example 2 : Multi-Trace analysis with FAIL verdict
 
-<img src="./README_images/exemple_data_fail.svg" alt="Multi-Trace analysis with FAIL verdict" width="500">
+<img src="./README_images/exemple_data_fail.svg" alt="Multi-Trace analysis with FAIL verdict" width="750">
  
 ## Example 3 : The scope operator to express variable scoping
 
-<img src="./README_images/with_scope.svg" alt="The scope operator to express variable scoping" width="500">
+<img src="./README_images/with_scope.svg" alt="The scope operator to express variable scoping" width="750">
