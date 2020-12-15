@@ -34,12 +34,12 @@ With those enriched models, we can refine the processes of interaction execution
 
 ## Example 1 : Multi-Trace analysis with PASS verdict
 
-<img src="./README_images/exemple_data_pass.svg" alt="Multi-Trace analysis with PASS verdict" width="750">
+<img src="./README_images/exemple_data_pass.svg" alt="Multi-Trace analysis with PASS verdict" width="850">
 
-## Example 2 : Multi-Trace analysis with FAIL verdict
+## Example 2 : Multi-Trace analysis with FAIL verdict due to path condition unsatisfiability
 
-<img src="./README_images/exemple_data_fail.svg" alt="Multi-Trace analysis with FAIL verdict" width="750">
+<img src="./README_images/exemple_data_fail.svg" alt="Multi-Trace analysis with FAIL verdict" width="850">
  
 ## Example 3 : The scope operator to express variable scoping
 
-<img src="./README_images/with_scope.svg" alt="The scope operator to express variable scoping" width="750">
+<img src="./README_images/with_scope.svg" alt="The scope operator to express variable scoping" width="850">
