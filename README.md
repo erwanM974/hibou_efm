@@ -125,7 +125,62 @@ we must have (at the moment of the evaluation of the guard) "l1.x >= l1.y" which
 interpretation of variables. In the next step, let us note that the path condition (the set of constraints on symbols that must be satisfiable)
 noted with the greek letter "π" has been updated accordingly.
 
-<img src="./README_images/exemple_1_explo.svg" alt="Example 1 exploration" width="900">
+<img src="./README_images/example_1_explo.svg" alt="Example 1 exploration" width="900">
+
+## Example 2 : Exploration of model with contradictions (unsatisfiable path conditions)
+
+Of course, with the addition of boolean expressions as guards, it may happen that those guards cannot be satisfied.
+In the following example we illustrate this.
+
+When launching "hibou explore example_2.hsf" on the "example_2.hsf" file which content is given below (and can be found in the "examples" folder)
+we get the following exploration tree.
+
+```
+@explore_option{
+    loggers = [graphic=svg]
+}
+@message{
+    m;
+    out (Integer, Integer);
+    error
+}
+@variable{
+    x : Integer;
+    y : Integer
+}
+@lifeline{
+    a
+}
+@init{
+    a.x = #;
+    a.y = #
+}
+@seq(
+    @alt(
+        m -> a[((5<x)/\(x<y))],
+        [⊥]a -- error ->|
+    ),
+    @alt(
+        m ->a[(y<x)],
+        o
+    ),
+    m -> a[(y=7)],
+    m -> a
+)
+```
+
+In the first alternative, we have two possibilities. Either lifeline "a" receives "m", or it emits "error". In the second case,
+we have a guard that has "⊥" for boolean expression. This guard is never satisfiable. As a result, when exploring the model (see below),
+we get an UNSAT. Let us remark that using "⊥" guards in this fashion can be used to model undesirable behaviors.
+
+In the left branch of the alternative, we add a constraint on the variables "x" and "y" of "a". This constraint it evaluated
+and incorporated into the path condition "π" at the next step. With "π" becoming "(#5 > 5)/\(#5 < #6)".
+
+However, at the next step, we have another alternative, where, in one of the branch, satisfying another guard is required. 
+This guard would translate (given the current values of variables) into "#6<#5", which is not compatible with our path condition "π".
+Therefore, we have another UNSAT.
+
+<img src="./README_images/example_2_explo.svg" alt="Example 1 exploration" width="900">
 
 ## Example 1 : Multi-Trace analysis with PASS verdict
 
