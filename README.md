@@ -268,10 +268,57 @@ of "m" with (24,55) as message parameters.
 
 <img src="./README_images/example_3_fail_param.svg" alt="Multi-Trace analysis with FAIL verdict due to wrong message parameters" width="850">
  
- ## Example 3.2 : Multi-Trace analysis with FAIL verdict due to path condition unsatisfiability
+## Example 3.2 : Multi-Trace analysis with FAIL verdict due to path condition unsatisfiability
  
- <img src="./README_images/exemple_data_fail.svg" alt="Multi-Trace analysis with FAIL verdict" width="850">
+Let us now consider the analysis of the trace given below. We can see that there is no problem here involving the incorrect
+transmission of data ((13,55) is emitted and received without change). However, instead of the "l2!bip" event as the second event
+of the component trace for "l2", we have "l2!bop". In the model, this corresponds to choosing the second branch of the alternative.
+However, this second branch is associated with a guard (x <= (y-2)). Given that "l2.x" is assigned the value 13+55 = 68 and "l2.y" is
+assigned the value 13-55 = -42, we cannot satisfy this guard (given the values of concrete parameters 13 and 55). 
+
+```
+{
+    [l1] l1!m(13,55);
+    [l2] l2?m(13,55).l2!bop
+}
+```
+
+As a result, when launching the analysis, with hibou, we get an UNSAT local verdict, leading to a Fail global verdict, as illustrated
+below.
+
+<img src="./README_images/example_3_fail_path.svg" alt="Multi-Trace analysis with FAIL verdict due to path condition unsatisfiability" width="850">
  
 ## Example 4 : The scope operator to express variable scoping
 
-<img src="./README_images/with_scope.svg" alt="The scope operator to express variable scoping" width="850">
+We use the following example so as to informally introduce a new operator : "scope", which did not exist in [hibou_label](https://github.com/erwanM974/hibou_label).
+
+```
+@analyze_option{
+    loggers = [graphic=svg];
+    strategy = DFS;
+    goal = WeakPass
+}
+@message{
+    m(Integer)
+}
+@variable{
+    x : Integer;
+    y : Integer
+}
+@lifeline{
+    l1;
+    l2
+}
+@loop_seq(
+    @scope{x}(
+        {x:=#}l1 -- m(x) -> l2{y:=$0}
+    )
+)
+```
+
+The scope operator, in combination with any loop operator, simply allows several instances of a given variable to be created on any given lifeline.
+
+In this example, the "x" variable is an abstract variable (never directly instanciated under the name "x").
+However, for each instance of the loop, a new instance of "x" i.e. "x_1" then "x_2", "x_3", ... is created.
+
+<img src="./README_images/example_4.svg" alt="The scope operator to express variable scoping" width="850">
