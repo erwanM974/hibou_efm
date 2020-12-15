@@ -1,0 +1,345 @@
+/*******************************************************************************
+ * Copyright (c) 2020 CEA LIST.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * Created on: 23 avr. 2020
+ *
+ * Contributors:
+ *  Arnault Lapitre (CEA LIST) arnault.lapitre@cea.fr
+ *  Erwan Mahe (CentraleSUpelec) erwan.mahe@student.ecp.fr
+ *   - Initial API and Implementation
+ ******************************************************************************/
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.helloworld";
+option java_outer_classname = "HelloWorldProto";
+option objc_class_prefix = "HLW";
+
+//import "google/protobuf/empty.proto";
+
+package sep.grpc;
+
+
+// The DIVERSITY/SYMBEX service definition.
+service Symbex {
+
+	////////////////////////////////////////////////////////////////////////////
+	// Initialization
+	rpc initialization (InitializationRequest) returns (InitializationReply) {}
+
+	////////////////////////////////////////////////////////////////////////////
+	// Model Parsing
+	rpc modelParse (ModelDefinitionRequest) returns (ModelParseReply) {}
+
+	rpc modelParseFile (ModelDefinitionRequest) returns (ModelParseReply) {}
+
+	// Model Parsing for Raw Textual 
+	rpc modelParseText (ModelDefinitionRequest) returns (ModelParseReply) {}
+
+	////////////////////////////////////////////////////////////////////////////
+	// Model Evaluation
+	rpc modelEval (ModelDefinitionRequest) returns (ModelEvalReply) {}
+
+	////////////////////////////////////////////////////////////////////////////
+	// SYMBEX
+
+	// Symbex Evaluation Initialization
+    rpc symbexEvalInit (SymbexEvalInitRequest) returns (SymbexEvalInitReply) {}
+
+	// Symbex Step
+	rpc symbexEvalStep (SymbexEvalStepRequest) returns (SymbexEvalStepReply) {}
+
+	// Symbex Evaluation
+	rpc symbexEvalContext (SymbexEvalContextRequest) returns (SymbexEvalStepReply) {}
+
+	// Symbex Evaluation of a Machine (by a string FQN_ID) on a symbolic Execution Context
+	rpc symbexEvalMachine (SymbexEvalRunnableRequest) returns (SymbexEvalRunnableReply) {}
+
+	// Symbex Evaluation of a Machine (by a string FQN_ID) on a Symbex Context
+	rpc symbexEvalBasicMachine (SymbexEvalRunnableRequest) returns (SymbexEvalRunnableBasicReply) {}
+
+	// Symbex Evaluation of a State (by a string FQN_ID) on a Symbex Context
+	rpc symbexEvalState (SymbexEvalRunnableRequest) returns (SymbexEvalRunnableReply) {}
+
+	// Symbex Evaluation of a Transition (by a string FQN_ID) on a Context
+	rpc symbexEvalTransition (SymbexEvalRunnableRequest) returns (SymbexEvalRunnableReply) {}
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// QUERY
+
+	// Symbex Query Variable Value
+	rpc queryValueofVariable (QueryValueForVariableRequest) returns (QueryValueForVariableReply) {}
+
+	// Symbex Query Trace for Condition
+	rpc queryNodeCondition (QueryValueForVariableRequest) returns (QueryValueForVariableReply) {}
+	rpc queryPathCondition (QueryValueForVariableRequest) returns (QueryValueForVariableReply) {}
+
+	// Symbex Query Trace for IO élement (input / output / newfresh)
+	rpc queryTraceIO(QueryValueForVariableRequest) returns (QueryValueForVariableReply) {}
+
+	// Symbex Query Trace for Executable element (machine / statemachine / state / transition)
+	rpc queryTraceExecutable (QueryValueForVariableRequest) returns (QueryValueForVariableReply) {}
+
+
+	////////////////////////////////////////////////////////////////////////////
+	// POST PROCESSING
+
+	rpc runPostProcessor (PostProcessingRequest) returns (PostProcessingReply) {}
+
+}
+
+
+// **********
+// EXPRESSION ENCODING
+enum OperatorKind {
+    NOP      = 0;
+    
+    // additive op
+    ADD      = 1;
+    MINUS    = 2;
+    UMINUS   = 3;
+    
+    // multiplicative op
+    MULT     = 4;
+    DIV      = 5;
+    
+    // logical op
+    OR       = 6;
+    AND      = 7;
+    NOT      = 9;
+    
+    // relationnal op
+    EQ       = 10;
+    NEQ      = 11;
+    GT       = 12;
+    GTE      = 13;
+    LT       = 14;
+    LTE      = 15;
+    
+    // other op
+    NEWFRESH = 16;
+}
+
+message Expression {
+    oneof expression_alt {
+        // ***
+    	// variable ID like a Fully Qualifed Name (FQN)
+        string variable_id  = 1;
+        // ***
+    	// symbol for symbolic parameterID like a Fully Qualifed Name (FQN)
+        string symbol_id    = 2;
+        // ***
+        // operation for sub expression
+        Operation operation = 3;
+        // ***
+        // builtin raw expression 
+         bool   raw_bool    = 4;
+         int64  raw_integer = 5;
+         double raw_float   = 6;
+         string raw_string  = 7;
+    }
+}
+
+message Operation {
+    OperatorKind operatorKind   = 1;
+    repeated Expression operand = 2;
+}
+
+// **********
+// VARIABLE VALUE TRANSMISSION
+message VariableValuePair {
+    string variable_id = 1;
+    Expression value   = 2;
+}
+// **********
+
+// **********
+// TYPED SYMBOL
+enum DataType {
+	ANY         = 0;
+	
+    BOOLEAN     = 1;
+    
+    INTEGER     = 2;
+    RATIONAL    = 3;
+    FLOAT       = 4;
+    
+    STRING      = 5;
+    
+    UNKNOWN     = 6;
+}
+
+message TypedSymbol {
+     string symbol_id = 1;
+     DataType type    = 2;
+}
+// **********
+
+
+// **********
+// The request / reply messages for Initialization.
+message InitializationRequest {
+    string session_id = 1;
+}
+  
+message InitializationReply {
+    string message = 1;
+}
+// **********
+
+// **********
+// The request for model definition.
+// string field for file path location or full raw text model or workflow
+message ModelDefinitionRequest {
+    oneof model_alt {
+    	// Model file path
+         string model_file_path = 1;
+         // Model raw text
+         string model_raw_text  = 2;
+	}
+	
+    oneof workflow_alt {
+    	// Model file path
+        string workflow_file_path = 3;
+    	// Model raw text
+        string workflow_raw_text  = 4;
+	}
+}
+// **********
+  
+// **********
+// The request / reply messages for Model Parsing.
+message ModelParseReply {
+    uint32 error_count    = 1;
+    uint32 warning_count  = 2;
+    repeated string error = 3;
+}
+// **********
+
+
+// **********
+// The request / reply messages for Model Evaluation.
+message ModelEvalReply {
+    ModelParseReply parse_reply = 1;
+    
+    uint32 execution_context_count   = 2;
+    uint32 execution_context_root_id = 3;
+    
+    repeated uint32 not_yet_eval_execution_context_id = 4;
+
+    uint32 step_count = 5;
+    uint32 eval_count = 6;
+
+    uint32 max_execution_context_height = 7;
+    uint32 max_execution_context_width  = 8;
+    
+    uint32 redundancy_count             = 9;
+    uint32 exit_execution_context_count = 10;
+    bool eval_limit_reached             = 11;
+}
+// **********
+
+
+// **********
+// The request / reply messages for Symbex initialization
+message SymbexEvalInitRequest {
+    repeated VariableValuePair variable_value = 1;
+}
+
+message SymbexEvalInitReply {
+    uint32 execution_context_id               = 1;
+    repeated VariableValuePair variable_value = 2;
+}
+// **********
+
+
+// **********
+// The request / reply messages for some Evaluation step
+message SymbexEvalStepRequest {
+    uint32 step_count                         = 1;
+    repeated VariableValuePair variable_value = 2;
+}
+  
+message SymbexEvalStepReply {    
+    uint32 step_count = 1;
+    uint32 eval_count = 2;
+    
+    repeated uint32 not_yet_eval_execution_context_id = 3;
+}
+// **********
+
+// **********
+// The request / reply messages for Evaluation of a Context (by a integer ID)
+message SymbexEvalContextRequest {
+    uint32 execution_context_id               = 1;
+    uint32 step_count                         = 2;
+    repeated VariableValuePair variable_value = 3;
+}
+  
+
+
+// **********
+// The request / reply message for Evaluation of a Machine / State / Transtion 
+// (by a string as Fully Qualified NameID) in the context of a symbeolic Execution Context
+message SymbexEvalRunnableRequest {
+     uint32 execution_context_id               = 1;
+     string runnable_element_id                = 2;
+     repeated VariableValuePair variable_value = 3;
+}
+  
+message SymbexEvalRunnableReply {    
+    repeated uint32 execution_context_id              = 1;
+    repeated uint32 not_yet_eval_execution_context_id = 2;
+}
+
+message SymbexEvalRunnableBasicReply {    
+    bool is_satisfiable                               = 1;
+    uint32 execution_context_id                       = 2;
+    
+	Expression path_condition                         = 3;
+	Expression other_condition                        = 4;
+	
+    repeated TypedSymbol created_symbols              = 5;
+    
+    repeated uint32 not_yet_eval_execution_context_id = 6;
+}
+// **********
+
+
+// **********
+// The request / reply message for Query on Symbex Context : value of a variable
+message QueryValueForVariableRequest {
+    uint32 execution_context_id = 1;
+    repeated string variable_id = 2;
+}
+
+message QueryValueForVariableReply {    
+    uint32 execution_context_id               = 1;
+    repeated VariableValuePair variable_value = 2;
+}
+// **********
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// POST PROCESSING
+
+  // **********
+// The request / reply message for Query on Symbex Context : value of a variable
+message PostProcessingRequest {
+	bool enable_execution_graph = 1;
+}
+
+message PostProcessingReply {
+	string execution_graph = 1;
+}
+// **********
+
+
