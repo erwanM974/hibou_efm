@@ -1,0 +1,13 @@
+// Example commands to run
+
+hibou_efm.exe explore example_1.hsf
+
+hibou_efm.exe explore example_2.hsf
+
+hibou_efm.exe analyze example_3.hsf example_3_wpass.htf
+
+hibou_efm.exe analyze example_3.hsf example_3_fail_param.htf
+
+hibou_efm.exe analyze example_3.hsf example_3_fail_path.htf
+
+hibou_efm.exe analyze example_4.hsf example_4.htf

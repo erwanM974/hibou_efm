@@ -1,0 +1,31 @@
+@explore_option{
+    loggers = [graphic=svg]
+}
+@message{
+    m;
+    out (Integer, Integer);
+    error
+}
+@variable{
+    x : Integer;
+    y : Integer
+}
+@lifeline{
+    a
+}
+@init{
+    a.x = #;
+    a.y = #
+}
+@seq(
+    @alt(
+        m -> a[((5<x)/\(x<y))],
+        [⊥]a -- error ->|
+    ),
+    @alt(
+        m ->a[(y<x)],
+        o
+    ),
+    m -> a[(y=7)],
+    m -> a
+)

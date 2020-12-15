@@ -1,0 +1,30 @@
+@analyze_option{
+    loggers = [graphic=svg];
+    goal = WeakPass
+}
+@message{
+    m(Integer,Integer);
+    bip;bop;boop
+}
+@variable{
+    x : Integer;
+    y : Integer;
+    v : Integer;
+    w : Integer
+}
+@lifeline{
+    l1;
+    l2
+}
+@init{
+    l1.v = #;
+    l1.w = #
+}
+@seq(
+    l1 -- m(#,(v+w)) -> l2{x:=($0+$1);y:=($0-$1)},
+    @alt(
+        [(x>(y-2))]l2 -- bip -> l1,
+        [(x<=(y-2))]l2 -- bop -> l1
+    ),
+    l2 -- boop ->|
+)

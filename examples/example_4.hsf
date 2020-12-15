@@ -1,0 +1,24 @@
+@explore_option{
+    loggers = [graphic=svg]
+}
+@analyze_option{
+    loggers = [graphic=svg];
+    strategy = DFS;
+    goal = WeakPass
+}
+@message{
+    m(Integer)
+}
+@variable{
+    x : Integer;
+    y : Integer
+}
+@lifeline{
+    l1;
+    l2
+}
+@loop_seq(
+    @scope{x}(
+        {x:=#}l1 -- m(x) -> l2{y:=$0}
+    )
+)
