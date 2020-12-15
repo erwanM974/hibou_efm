@@ -182,14 +182,96 @@ Therefore, we have another UNSAT.
 
 <img src="./README_images/example_2_explo.svg" alt="Example 1 exploration" width="900">
 
-## Example 1 : Multi-Trace analysis with PASS verdict
+## Example 3-1 : Multi-Trace analysis with PASS verdict
 
-<img src="./README_images/exemple_data_pass.svg" alt="Multi-Trace analysis with PASS verdict" width="850">
+As in [hibou_label](https://github.com/erwanM974/hibou_label), in hibou_efm, we can also analyse traces and multi-traces w.r.t. interaction models.
+One of the notable improvement in this regards, is that we can now analyse traces which contains concrete data in the form of message parameters.
 
-## Example 2 : Multi-Trace analysis with FAIL verdict due to path condition unsatisfiability
+Let us consider the following example:
 
-<img src="./README_images/exemple_data_fail.svg" alt="Multi-Trace analysis with FAIL verdict" width="850">
+We have the following .hsf model file:
+
+```
+@analyze_option{
+    loggers = [graphic=svg];
+    goal = WeakPass
+}
+@message{
+    m(Integer,Integer);
+    bip;bop;boop
+}
+@variable{
+    x : Integer;
+    y : Integer;
+    v : Integer;
+    w : Integer
+}
+@lifeline{
+    l1;
+    l2
+}
+@init{
+    l1.v = #;
+    l1.w = #
+}
+@seq(
+    l1 -- m(#,(v+w)) -> l2{x:=($0+$1);y:=($0-$1)},
+    @alt(
+        [(x>(y-2))]l2 -- bip -> l1,
+        [(x<=(y-2))]l2 -- bop -> l1
+    ),
+    l2 -- boop ->|
+)
+```
+
+And we analyse a multi-trace specified by the following .htf file (in "examples" folder). Let us remark the notation
+for specifying concrete message parameters.
+
+```
+{
+    [l1] l1!m(13,55);
+    [l2] l2?m(13,55).l2!bip
+}
+```
+
+When we launch the analysis, we get a WeakPass verdict (it is a prefix of an accepted multi-trace) as illustrated below.
+Let us note that the concrete values of the message parameters in the input trace that is analysed are passed onto the path condition
+during the analysis.
+For instance, in the first step of the analysis, we consume the action "l1!m(13,55)" from the trace.
+On the side of the model, the only action that may match is the "l1!m(#,(v+w))", where # corresponds to a new unknown of the problem
+(a fresh symbol in symbolic execution) and "(v+w)" is a term cosntructed from "l1.v" and "l1.w" (given that the action occurs on "l1).
+As a result, the consumption of this action from the trace implies that it must match the symbolic action.
+Given that current value of "l1.v" is the symbol #11 and that of "l1.w" is #12, this means that we must have "(#11+#12)=55"
+(second message parameter).
+Also, when we execute the symbolic action, a new symbol #13 is created, and it must be so that #13=13 
+(first message parameter).
+As a result, we add "((#11+#12)=55)/\(#13=13))" to the path condition.
+
+<img src="./README_images/example_3_wpass.svg" alt="Multi-Trace analysis with PASS verdict" width="850">
+
+## Example 3.2 : Multi-Trace analysis with FAIL verdict due to wrong message parameters (e.g. man-in-the-middle attack)
+
+Let us now consider the analysis of a different multi-trace w.r.t. the same interaction model. We consider the multi-trace given below.
+Let us remark, that the message "m" transmitted from "l1" to "l2" has been tempered with during the transmission (for instance,
+this could be interpreted as a man-in-the-middle attack; the integrity of the transmitted data being jeopardized).
+
+```
+{
+    [l1] l1!m(13,55);
+    [l2] l2?m(24,55).l2!bip
+}
+```
+
+During the analysis, given that the expected reception event is rewritten into the model in the second step, we know that (13,55) are
+expected to be received by "l2". As a result, we get an UNSAT when trying to evaluate the reception 
+of "m" with (24,55) as message parameters.
+
+<img src="./README_images/example_3_fail_param.svg" alt="Multi-Trace analysis with FAIL verdict due to wrong message parameters" width="850">
  
-## Example 3 : The scope operator to express variable scoping
+ ## Example 3.2 : Multi-Trace analysis with FAIL verdict due to path condition unsatisfiability
+ 
+ <img src="./README_images/exemple_data_fail.svg" alt="Multi-Trace analysis with FAIL verdict" width="850">
+ 
+## Example 4 : The scope operator to express variable scoping
 
 <img src="./README_images/with_scope.svg" alt="The scope operator to express variable scoping" width="850">
