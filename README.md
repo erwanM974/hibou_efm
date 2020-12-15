@@ -24,13 +24,108 @@ in collaboration with the
 
 # Principle
 
+In short, we extend the functionalities of [hibou_label](https://github.com/erwanM974/hibou_label) to interaction models
+that contain data and time. Those enriched models involve (informally):
+- "variables" that can be owned by specific lifelines and which values may vary during the execution of the interaction model
+- "message parameters" i.e. the messages which are exchanged between lifelines are not simple labels anymore but instead they can
+  carry some values which can be computed on the fly (at the moment of the emission) and transmitted between lifelines
+- "assignments" which are basic operations that can accompany the observation of an event within the interaction model (emission or reception)
+  and modify the value of a given "variable". This variable can be already owned by the lifeline on which the assignment occurs, and in this
+  case, its value is simply modified. And if the variable did not exist, it is created when evaluating the assignment. The value that
+  is assigned to a variable by an assignment is computed from a term that can be be constructed from raw values, typed operators, 
+  variables and so on.
+- "guards", which are boolean conditions on the expression of a certain event (emission or reception). Those boolean expressions can
+  constrain the variables (their current values) of the lifeline on which the event occurs.
+- "clocks", which are a specific kind of variables, which values change when time elapses (without needing assignments).
+
+The diagram below illustrates how one can use those new tools so as to refine a "labelled" interaction model (on the left, without data 
+and time), into a "symbolic" interaction model (on the right, with data and time).
+
+Here, when lifeline "calc1" receives the message "in", it also received a value (an integer which value is unspecified - # symbol -) which was not the case
+in the model on the left. In addition to that, once the reception event occurs, lifeline "calc1" resets its clock "respD" (i.e.
+set it to zero), creates a new variable "val" (a new one for each iteration of the loop, thanks to the "scope" operator)
+and assign to it a value which is that of the received value (0th argument of the "in" message) plus 4.
+
+Also, in the enriched model, the subsequent emission of the "out" message by "calc1" must satisfies the guard "respD < 1.5". Given that
+this clock has been reset when evaluating the reception of "in", this means that the guard specifies a minimum response time
+for "calc1". Once receiving "in", it must emit "out" within 1.5 seconds. In addition, the emitted "out" message is parameterized
+with 2 arguments, one of whioh corresponds to the current value (at the moment of the emission) of the "val" variable on lifeline
+"calc1".
+
 <img src="./README_images/data_time.png" alt="model with data and time" width="1000">
 
+To sum up, this extension to data and time allows finer specifications of the expected behaviors for distributed systems modelled
+by interactions. Message parameters constitute a direct refinement of abstract message labels and allow the verification of
+concrete inputs and outputs when analysing (multi-)traces. Guards may constrain which events can be taken at any moment 
+(they must be satisfiable at the moment of the execution of said event, given the current values of variables). As a result,
+the use of guards refine which paths can be taken when exploring the execution tree of a given interaction model.
+
+In the following, we provide some explanations via the description of some concrete examples. 
 
 # Refining the execution of interaction models with symbolic execution
 
 With those enriched models, we can refine the processes of interaction execution originally used for labelled interaction models.
 
+
+## Example 1 : Model Exploration with symbolic execution
+
+When launching "hibou explore example_1.hsf" on the "example_1.hsf" file which content is given below (and can be found in the "examples" folder)
+we get the following exploration tree.
+
+```
+@explore_option{
+    loggers = [graphic=svg];
+    pre_filters = [ max_depth = 3 ]
+}
+@message{
+    m1(Integer,Integer);
+    m2(Integer);
+    m3(Integer,Integer)
+}
+@variable{
+    x : Integer;
+    y : Integer;
+    z : Integer;
+    id : Integer
+}
+@lifeline{
+    l1;l2;l3
+}
+@init{
+    l2.id = 525;
+    l2.z = 23;
+    l3.id = 491;
+    l3.z = #
+}
+@seq(
+    m1(#,#) -> l1{x:=$0;y:=$1},
+    @alt(
+        @seq(
+            [(x>=y)]l1 -- m2((x*y)) -> l2{z:=(z-$0)},
+            l2 -- m3(z,id) -> l1
+        ),
+        @seq(
+            [(x<y)]l1 -- m2((y-x)) -> l3{z:=(z+$0)},
+            l3 -- m3(z,id) -> l1
+        )
+    )
+)
+```
+
+We can see here that, initially, lifeline "l2" has 2 variables : "z" which value is 23 and "id" which value is 525. Lifeline "l3"
+has also two variables of the same names (but those are not the same variables given that they belong to different lifelines) but
+with different values. Let us notice that "l3.z" (the variable "z" of lifeline "l3") has an unknown value, which corresponds to the
+symbol (as in symbolic execution) #14.
+
+When executing the reception of "m1" by "l1", 2 new unknown (symbols #15 and #16) are added to the problem and assigned to variables
+"l1.x" and "l1.y".
+
+In the following alternative, two choices are possible, but constrained by guards. In the first (on the left in the exploration tree)
+we must have (at the moment of the evaluation of the guard) "l1.x >= l1.y" which translates into "#15 >= #16" given the current
+interpretation of variables. In the next step, let us note that the path condition (the set of constraints on symbols that must be satisfiable)
+noted with the greek letter "π" has been updated accordingly.
+
+<img src="./README_images/exemple_1_explo.svg" alt="Example 1 exploration" width="900">
 
 ## Example 1 : Multi-Trace analysis with PASS verdict
 
