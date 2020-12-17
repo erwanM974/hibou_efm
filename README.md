@@ -322,3 +322,31 @@ In this example, the "x" variable is an abstract variable (never directly instan
 However, for each instance of the loop, a new instance of "x" i.e. "x_1" then "x_2", "x_3", ... is created.
 
 <img src="./README_images/example_4.svg" alt="The scope operator to express variable scoping" width="850">
+
+
+# How to use
+
+The basic commands of hibou_efm are the same as those of [hibou_label](https://github.com/erwanM974/hibou_label); namely
+with the "explore" and "analyze" commands.
+
+However, as hibou_efm relies on communicating with [Diversity](https://projects.eclipse.org/projects/modeling.efm)
+to perform symbolic execution, you need to launch [Diversity](https://projects.eclipse.org/projects/modeling.efm)
+in another command prompt on your computer.
+
+You will therefore have 2 distinct prompts as illustrated below. 
+Let us remark that we used the [MSYS2](https://www.msys2.org/) prompt to launch 
+[Diversity](https://projects.eclipse.org/projects/modeling.efm) on Microsoft Windows.
+
+<img src="./README_images/hibou_efm_cap1.svg" alt="How To Use 1/3" width="1000">
+
+Once the [Diversity](https://projects.eclipse.org/projects/modeling.efm) server is ready, we can launch
+commands normally with hibou_efm.
+
+<img src="./README_images/hibou_efm_cap2.svg" alt="How To Use 1/3" width="1000">
+
+For instance here, we launched an analysis (the one from the example number 3.1).
+
+<img src="./README_images/hibou_efm_cap3.svg" alt="How To Use 1/3" width="1000">
+
+
+
