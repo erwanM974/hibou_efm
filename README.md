@@ -69,7 +69,7 @@ With those enriched models, we can refine the processes of interaction execution
 
 ## Example 1 : Model Exploration with symbolic execution
 
-When launching "hibou explore example_1.hsf" on the "example_1.hsf" file which content is given below (and can be found in the "examples" folder)
+When launching "hibou explore example_1.hxsf" on the "example_1.hxsf" file which content is given below (and can be found in the "examples" folder)
 we get the following exploration tree.
 
 ```
@@ -132,7 +132,7 @@ noted with the greek letter "π" has been updated accordingly.
 Of course, with the addition of boolean expressions as guards, it may happen that those guards cannot be satisfied.
 In the following example we illustrate this.
 
-When launching "hibou explore example_2.hsf" on the "example_2.hsf" file which content is given below (and can be found in the "examples" folder)
+When launching "hibou explore example_2.hxsf" on the "example_2.hxsf" file which content is given below (and can be found in the "examples" folder)
 we get the following exploration tree.
 
 ```
@@ -189,7 +189,7 @@ One of the notable improvement in this regards, is that we can now analyse trace
 
 Let us consider the following example:
 
-We have the following .hsf model file:
+We have the following .hxsf model file:
 
 ```
 @analyze_option{
