@@ -75,7 +75,7 @@ we get the following exploration tree.
 ```
 @explore_option{
     loggers = [graphic=svg];
-    pre_filters = [ max_depth = 3 ]
+    filters = [ max_depth = 3 ]
 }
 @message{
     m1(Integer,Integer);
