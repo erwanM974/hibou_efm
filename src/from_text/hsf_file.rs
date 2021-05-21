@@ -42,7 +42,7 @@ use crate::from_text::hibou_options::{HibouOptions,parse_hibou_options};
 use crate::process::hibou_process::HibouPreFilter;
 use crate::from_text::setup::{InterpretationItemPlan,parse_setup};
 
-pub static HIBOU_MODEL_FILE_EXTENSION : &'static str = "hsf";
+pub static HIBOU_MODEL_FILE_EXTENSION : &'static str = "hxsf";
 
 pub enum ProcessKind {
     Explore,

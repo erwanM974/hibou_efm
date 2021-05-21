@@ -98,13 +98,13 @@ pub fn parse_interaction(gen_ctx : &GeneralContext, sd_interaction_pair : Pair<R
                 },
                 Ok( sub_int ) => {
                     match loop_kind_pair.as_rule() {
-                        Rule::SD_LOOP_STRICT => {
+                        Rule::SD_LOOPX => {
                             return Ok( Interaction::Loop(ScheduleOperatorKind::Strict,Box::new(sub_int)) );
                         },
-                        Rule::SD_LOOP_SEQ => {
+                        Rule::SD_LOOPH => {
                             return Ok( Interaction::Loop(ScheduleOperatorKind::Seq,Box::new(sub_int)) );
                         },
-                        Rule::SD_LOOP_PAR => {
+                        Rule::SD_LOOPP => {
                             return Ok( Interaction::Loop(ScheduleOperatorKind::Par,Box::new(sub_int)) );
                         },
                         _ => {

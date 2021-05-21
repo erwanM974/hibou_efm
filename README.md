@@ -14,7 +14,7 @@ which acts as a symbolic execution engine.
 We invite you to familiarize yourself with "[hibou_label](https://github.com/erwanM974/hibou_label)" before going any further
 with "hibou_efm".
 
-This piece of software has been developed as part of my PhD thesis in 2018-2020 at the 
+This piece of software has been developed as part of my PhD thesis in 2018-2021 at the 
 [CentraleSupelec](https://www.centralesupelec.fr/)
 engineering school
 (part of Université Paris-Saclay) 
@@ -224,7 +224,7 @@ We have the following .hsf model file:
 )
 ```
 
-And we analyse a multi-trace specified by the following .htf file (in "examples" folder). Let us remark the notation
+And we analyse a multi-trace specified by the following .hxtf file (in "examples" folder). Let us remark the notation
 for specifying concrete message parameters.
 
 ```
@@ -309,7 +309,7 @@ We use the following example so as to informally introduce a new operator : "sco
     l1;
     l2
 }
-@loop_seq(
+@loopH(
     @scope{x}(
         {x:=#}l1 -- m(x) -> l2{y:=$0}
     )

@@ -106,15 +106,15 @@ pub fn draw_interaction_rec(    image : &mut RgbImage,
         &Interaction::Loop(ref lkind, ref i1) => {
             match lkind {
                 ScheduleOperatorKind::Strict => {
-                    let label = vec![TextToPrint{text:SYNTAX_LOOP_STRICT.to_string(),color:Rgb(HCP_Black)}];
+                    let label = vec![TextToPrint{text:SYNTAX_LOOPX.to_string(),color:Rgb(HCP_Black)}];
                     return draw_unary_combined_fragment(image,  gen_ctx, exe_ctx,i1,lf_x_widths,texts_to_print, label, nest_shift, yshift);
                 },
                 ScheduleOperatorKind::Seq => {
-                    let label = vec![TextToPrint{text:SYNTAX_LOOP_SEQ.to_string(),color:Rgb(HCP_Black)}];
+                    let label = vec![TextToPrint{text:SYNTAX_LOOPH.to_string(),color:Rgb(HCP_Black)}];
                     return draw_unary_combined_fragment(image,  gen_ctx, exe_ctx,i1,lf_x_widths,texts_to_print, label, nest_shift, yshift);
                 },
                 ScheduleOperatorKind::Par => {
-                    let label = vec![TextToPrint{text:SYNTAX_LOOP_PAR.to_string(),color:Rgb(HCP_Black)}];
+                    let label = vec![TextToPrint{text:SYNTAX_LOOPP.to_string(),color:Rgb(HCP_Black)}];
                     return draw_unary_combined_fragment(image,  gen_ctx, exe_ctx,i1,lf_x_widths,texts_to_print, label, nest_shift, yshift);
                 }
             }

@@ -47,7 +47,7 @@ fn get_ascii_left() -> Vec<&'static str> {
     my_vec.push(r#"-"-"-  Oracle     "#);
     my_vec.push(r#" \_/   Utility    "#);
     my_vec.push(r#"                  "#);
-    my_vec.push(r#"   V-efm-2020-10  "#);
+    my_vec.push(r#"   V-efm-0.1.1    "#);
     return my_vec;
 }
 

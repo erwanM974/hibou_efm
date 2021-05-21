@@ -30,7 +30,7 @@ use crate::from_text::data::generic::parse_data;
 
 use crate::core::syntax::data::builtin::float::TD_Float;
 
-pub static HIBOU_TRACE_FILE_EXTENSION : &'static str = "htf";
+pub static HIBOU_TRACE_FILE_EXTENSION : &'static str = "hxtf";
 
 pub fn parse_htf_file(file_path : &str,
                       gen_ctx : &GeneralContext,

@@ -37,7 +37,7 @@ pub fn make_lifeline_initialization_action(gen_ctx : &GeneralContext,
     // ***
     xlia_action_str.push_str("\t@moe:\n");
     xlia_action_str.push_str("\t\t@run{\n");
-    xlia_action_str.push_str("\t\t// initialization of variables according to @init section of .hsf Hibou Specification File\n");
+    xlia_action_str.push_str("\t\t// initialization of variables according to @init section of Hibou Specification File\n");
     // ***
     match exe_ctx.get_lf_interpretation(lf_id) {
         None => {},

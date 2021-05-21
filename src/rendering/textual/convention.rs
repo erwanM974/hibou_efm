@@ -18,9 +18,9 @@ pub static SYNTAX_PAR: &'static str = "par";
 pub static SYNTAX_ALT: &'static str = "alt";
 pub static SYNTAX_SCOPE: &'static str = "scope";
 pub static SYNTAX_LOOP: &'static str = "loop_";
-pub static SYNTAX_LOOP_STRICT: &'static str = "loop_strict";
-pub static SYNTAX_LOOP_SEQ: &'static str = "loop_seq";
-pub static SYNTAX_LOOP_PAR: &'static str = "loop_par";
+pub static SYNTAX_LOOPX: &'static str = "loopX";
+pub static SYNTAX_LOOPH: &'static str = "loopH";
+pub static SYNTAX_LOOPP: &'static str = "loopP";
 
 pub static SYNTAX_BREAK: &'static str = "break";
 pub static SYNTAX_CONTINUE: &'static str = "continue";

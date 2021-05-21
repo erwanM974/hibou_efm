@@ -17,7 +17,7 @@
     l1;
     l2
 }
-@loop_seq(
+@loopH(
     @scope{x}(
         {x:=#}l1 -- m(x) -> l2{y:=$0}
     )

@@ -183,10 +183,10 @@ SD_ALT_INT = { SD_ALT ~ "(" ~ SD_INTERACTION ~ ( "," ~ SD_INTERACTION)+ ~ ")" }
 SD_PAR = {"@par"}
 SD_PAR_INT = { SD_PAR ~ "(" ~ SD_INTERACTION ~ ( "," ~ SD_INTERACTION)+ ~ ")" }
 
-SD_LOOP_STRICT = {"@loop_strict"}
-SD_LOOP_SEQ = {"@loop_seq"}
-SD_LOOP_PAR = {"@loop_par"}
-SD_LOOP_INT = { (SD_LOOP_STRICT | SD_LOOP_SEQ | SD_LOOP_PAR) ~ "(" ~ SD_INTERACTION ~ ")" }
+SD_LOOPX = {"@loopX"}
+SD_LOOPH = {"@loopH"}
+SD_LOOPP = {"@loopP"}
+SD_LOOP_INT = { (SD_LOOPX | SD_LOOPH | SD_LOOPP) ~ "(" ~ SD_INTERACTION ~ ")" }
 
 SD_SCOPE = {"@scope"}
 SD_SCOPED_PARAMS = { VAR_LABEL ~ ("," ~ VAR_LABEL)* }
@@ -223,7 +223,7 @@ OPTION_PREFILTER_MAX_DEPTH = { "max_depth" ~ "=" ~ ARITH_INTEGER }
 OPTION_PREFILTER_MAX_LOOP_DEPTH = { "max_loop_depth" ~ "=" ~ ARITH_INTEGER }
 OPTION_PREFILTER_MAX_NODE_NUMBER = { "max_node_number" ~ "=" ~ ARITH_INTEGER }
 OPTION_PREFILTER = _{ OPTION_PREFILTER_MAX_DEPTH | OPTION_PREFILTER_MAX_LOOP_DEPTH | OPTION_PREFILTER_MAX_NODE_NUMBER }
-OPTION_PREFILTERS_DECL = { "pre_filters" ~ "=" ~ "[" ~ OPTION_PREFILTER ~ ("," ~ OPTION_PREFILTER)* ~ "]" }
+OPTION_PREFILTERS_DECL = { "filters" ~ "=" ~ "[" ~ OPTION_PREFILTER ~ ("," ~ OPTION_PREFILTER)* ~ "]" }
 // ***********************************************
 OPTION_PRIORITTY_emission = { "emission" }
 OPTION_PRIORITTY_reception = { "reception" }
